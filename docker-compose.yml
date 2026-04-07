@@ -18,4 +18,5 @@ services:
       - HF_TOKEN=${HF_TOKEN}
       - HF_HOME=/root/.cache/huggingface
       - TRANSFORMERS_CACHE=/root/.cache/huggingface
-    command: ["python", "-m", "vllm.entrypoints.openai.api_server", "--model", "apolo13x/Qwen3.5-35B-A3B-quantized.w4a16", "--served-model-name", "Qwen3.5-35B-A3B", "--port", "8000", "--trust-remote-code", "--max-model-len", "131076", "--gpu-memory-utilization", "0.70", "--reasoning-parser", "qwen3", "--enable-auto-tool-choice", "--tool-call-parser", "qwen3_coder", "--enable-prefix-caching", "--mm-encoder-tp-mode", "data", "--mm-processor-cache-type", "shm"]
+      - VLLM_API_KEY=${VLLM_API_KEY}
+    command: ["python", "-m", "vllm.entrypoints.openai.api_server", "--model", "apolo13x/Qwen3.5-35B-A3B-quantized.w4a16", "--served-model-name", "Qwen3.5-35B-A3B", "--port", "8000", "--trust-remote-code", "--max-model-len", "131076", "--gpu-memory-utilization", "0.70", "--reasoning-parser", "qwen3", "--enable-auto-tool-choice", "--tool-call-parser", "qwen3_coder", "--enable-prefix-caching", "--mm-encoder-tp-mode", "data", "--mm-processor-cache-type", "shm", "--api-key", "${VLLM_API_KEY}"]

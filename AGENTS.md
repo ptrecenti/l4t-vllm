@@ -24,11 +24,13 @@ Configurar um servidor vLLM via Docker Compose para servir o modelo `apolo13x/Qw
 - [x] Multimodal encoder TP mode: `data`
 - [x] Processor cache: SHM
 - [x] HF_TOKEN configurado via ambiente
+- [x] **API Key Authentication** - Bearer token protection
 
 ### OpenCode Integration
 - [x] Provider: `@ai-sdk/openai-compatible`
 - [x] Base URL: `http://localhost:8000/v1`
 - [x] Modalities configuradas: `["text", "image"]` input, `["text"]` output
+- [x] API key via `~/.local/share/opencode/auth.json`
 - [x] Model integrado e funcionando
 
 ## Testes Realizados
@@ -80,20 +82,38 @@ Configurar um servidor vLLM via Docker Compose para servir o modelo `apolo13x/Qw
 ## Comandos Úteis
 
 ```bash
+# Gerar nova API key
+openssl rand -hex 32
+
 # Iniciar servidor
 cd ~/dev/l4t-vllm && docker compose up -d
 
 # Ver logs
 docker logs -f vllm-server
 
-# Verificar status
-curl http://localhost:8000/v1/models
+# Verificar status (com API key)
+curl -H "Authorization: Bearer SUA_API_KEY" http://localhost:8000/v1/models
 
-# Testar inferência
+# Testar inferência (com API key)
 curl -X POST http://localhost:8000/v1/chat/completions \
+  -H "Authorization: Bearer SUA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"model": "Qwen3.5-35B-A3B", "messages": [{"role": "user", "content": "Hello"}]}'
 
 # Copiar config OpenCode
 cp ~/dev/l4t-vllm/opencode.json ~/.config/opencode/opencode.json
+
+# Configurar API key no OpenCode (Opção 1: via /connect)
+opencode
+/connect  # Procure por "Other" e digite "vllm"
+
+# Configurar API key no OpenCode (Opção 2: editar auth.json)
+cat >> ~/.local/share/opencode/auth.json << 'EOF'
+{
+  "vllm": {
+    "type": "api",
+    "key": "SUA_API_KEY_AQUI"
+  }
+}
+EOF
 ```
