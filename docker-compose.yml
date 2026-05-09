@@ -21,15 +21,17 @@ services:
     command: [
       "python", "-m", "vllm.entrypoints.openai.api_server", 
       "--model", "cyankiwi/Qwen3.6-35B-A3B-AWQ-4bit", 
-      "--served-model-name", "qwen-thinker", 
+      "--served-model-name", "qwen36", 
       "--port", "8089",
       "--trust-remote-code", 
-      "--kv-cache-dtype","fp8", 
-      "--gpu-memory-utilization", "0.85",
+      "--kv-cache-dtype","fp8",
+      "--max-model-len", "131072",
       "--max-num-batched-tokens", "32768",
+      "--gpu-memory-utilization", "0.85",
       "--limit-mm-per-prompt", "{\"image\": 4, \"video\": 1}", 
       "--reasoning-parser", "qwen3", 
       "--enable-auto-tool-choice", 
       "--tool-call-parser", "qwen3_coder", 
-      "--enable-prefix-caching"
-    ]
+      "--enable-prefix-caching",
+      "--default-chat-template-kwargs", "{\"enable_thinking\": false}"
+      ]
