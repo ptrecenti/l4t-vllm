@@ -4,6 +4,7 @@ services:
     container_name: vllm-server
     network_mode: host
     shm_size: "16gb"
+    restart: unless-stopped
     deploy:
       resources:
         reservations:
